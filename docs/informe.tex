@@ -191,16 +191,64 @@ enfoque puramente documental del modelado, en MDD el modelo condiciona directame
 artefacto de software producido, lo que exige rigor sintáctico y semántico en su construcción.
 
 \subsection{Transformaciones M2M y M2T}
+Las transformaciones dentro del ciclo MDD se clasifican en dos grandes familias:
+\begin{itemize}[nosep]
+  \item \textbf{Modelo-a-modelo (M2M):} producen un modelo destino a partir de un modelo de origen,
+        ambos conformes a metamodelos —por ejemplo, la transformación PIM~$\rightarrow$~PSM—.
+        El estándar OMG de referencia es \textit{Query/View/Transformation} (QVT) versión~1.3
+        \cite{omg2016qvt}.
+  \item \textbf{Modelo-a-texto (M2T):} producen artefactos textuales —código fuente, ficheros de
+        configuración, documentación— a partir de un modelo. El estándar OMG de referencia es
+        \textit{MOF Model to Text} (MOFM2T) versión~1.0 \cite{omg2008mofm2t}, del cual
+        \textbf{Acceleo} es una implementación de referencia dentro del ecosistema Eclipse
+        \cite{eclipseacceleo}.
+\end{itemize}
+El presente proyecto emplea una transformación M2T: el modelo de clases construido en Papyrus se
+traduce directamente a código fuente mediante plantillas Acceleo, sin un paso intermedio explícito de
+transformación PIM~$\rightarrow$~PSM independiente.
 
 \subsection{Metamodelo y perfiles UML}
+Un metamodelo define la sintaxis abstracta de un lenguaje de modelado; UML se define formalmente
+sobre MOF (\textit{Meta Object Facility}) \cite{omg2017uml}. El generador de código opera sobre las
+clases, atributos, asociaciones y estereotipos definidos por ese metamodelo. Los \textbf{perfiles UML}
+son el mecanismo estándar para extender el metamodelo con estereotipos, valores etiquetados y
+restricciones propias de un dominio o plataforma (por ejemplo, un perfil de persistencia o de
+arquitectura en capas). En AquaGest, el generador Acceleo utiliza los estereotipos aplicados sobre las
+clases del subsistema de alimentación para decidir qué construcciones del lenguaje objetivo producir.
 
 \subsection{Plantillas de transformación}
+Una plantilla (\textit{template}) es un fragmento parametrizado que la herramienta MDD instancia
+para cada elemento del modelo que cumple determinado patrón. En Acceleo las plantillas se escriben
+en el lenguaje MTL (\textit{Model to Text Language}) sobre ficheros con extensión \texttt{.mtl}, que
+recorren el modelo UML/Ecore de origen y generan los ficheros de texto correspondientes.
 
 \subsection{Forward, reverse y round-trip engineering}
+\begin{itemize}[nosep]
+  \item \textbf{Forward engineering:} a partir del modelo se genera el código; es el flujo principal
+        demostrado en este documento.
+  \item \textbf{Reverse engineering:} a partir del código existente se reconstruye un modelo.
+  \item \textbf{Round-trip engineering:} ambas direcciones se mantienen sincronizadas de forma
+        controlada, de modo que un cambio en el modelo se refleje en el código regenerado sin
+        destruir el trabajo manual previamente incorporado.
+\end{itemize}
+La Sección~\ref{sec:roundtrip} de este documento evidencia un ciclo de \textit{round-trip} controlado
+sobre el subsistema de alimentación de AquaGest.
 
 \subsection{Diagramas UML admisibles como origen}
+Conforme a la guía de la actividad, el diagrama de clases es obligatorio como base de la generación
+estructural. AquaGest complementa este diagrama de origen, cuando aporta valor a la generación o a
+la comprensión del subsistema, con diagramas de casos de uso (contexto del módulo de alimentación)
+y de estados (ciclo de vida de un lote de camarón dentro de un estanque).
 
 \subsection{Estado del arte}
+El campo de las transformaciones de modelos cuenta con más de sesenta herramientas catalogadas en
+la literatura \cite{kahani2019}, y persisten retos abiertos de escalabilidad, interoperabilidad y adopción
+industrial \cite{bucchiarone2020}. Estudios de práctica industrial reportan una adopción todavía
+heterogénea de MDE en la industria del software, condicionada por la curva de aprendizaje de las
+herramientas y por la madurez de los generadores disponibles para cada plataforma
+\cite{whittle2014}. Este panorama refuerza la pertinencia de documentar, como se hace en este
+proyecto, tanto los beneficios como las limitaciones observadas al aplicar MDD sobre un caso real
+como AquaGest.
 
 \section{Justificación de la selección de la herramienta}
 
