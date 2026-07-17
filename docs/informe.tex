@@ -100,7 +100,7 @@
 
 \textbf{\large UNIVERSIDAD TÉCNICA ESTATAL DE QUEVEDO}\\[0cm]
 
-\includegraphics[width=5cm]{imagenes/logo.png}
+\includegraphics[width=5cm]{figuras/logo.png}
 
 \textbf{PRÁCTICA EXPERIMENTAL - UNIDAD II}\\[0.8cm]
 
@@ -143,16 +143,52 @@ ING. GUERRERO ULLOA GLEISTON CICERON\\[0.5cm]
 
 \section*{Resumen}
 \addcontentsline{toc}{section}{Resumen}
-
-
+La acuicultura de camarón constituye una de las principales actividades productivas del litoral
+ecuatoriano, y su digitalización exige sistemas de información capaces de administrar de forma
+confiable el ciclo biológico del cultivo, la trazabilidad de insumos y la toma de decisiones operativas.
+El presente documento reporta la aplicación del paradigma de Desarrollo Dirigido por Modelos (MDD,
+\textit{Model-Driven Development}) sobre \textbf{AquaGest}, Sistema Inteligente para la Gestión de una
+Camaronera, correspondiente al Proyecto Fin de Curso (PFC) del equipo. Se seleccionó
+\textbf{Eclipse Papyrus} como entorno de modelado UML y \textbf{Acceleo} como motor de
+transformación modelo-a-texto (M2T), en correspondencia con el estándar OMG MOFM2T~1.0. El
+subsistema demostrado corresponde a la \textbf{gestión de alimentación y control de estanques},
+módulo que administra estanques, lotes de camarón, planes de alimentación, registros de dosificación
+y sensores de calidad de agua. El documento describe el modelo de clases de origen construido en
+Papyrus, la configuración del módulo de generación en Acceleo, el proceso de generación de código,
+la verificación de compilación y ejecución del artefacto resultante, y el cierre del ciclo mediante una
+prueba de \textit{roundtrip} controlada. Las evidencias gráficas del proceso (capturas del modelo, del
+generador, del código producido y de la ejecución) se referencian a lo largo del documento como
+espacios reservados pendientes de incorporación tras la ejecución real de la demostración.
 
 \section{Marco teórico}
-
 \subsection{Ingeniería Dirigida por Modelos (MDE)}
+La Ingeniería Dirigida por Modelos (\textit{Model-Driven Engineering}, MDE) es un paradigma en el
+cual los modelos dejan de ser documentación de apoyo y se convierten en artefactos de primera clase
+del proceso de desarrollo: el modelo es la fuente autoritativa del sistema y las implementaciones se
+derivan de él mediante transformaciones automatizadas \cite{schmidt2006,bucchiarone2020}. Este
+cambio de enfoque desplaza el esfuerzo de ingeniería desde la escritura manual de código hacia la
+correcta especificación y evolución de los modelos.
 
 \subsection{Model-Driven Architecture (MDA)}
+La \textit{Model-Driven Architecture} (MDA) es la iniciativa concreta del \textit{Object Management
+Group} (OMG) que operacionaliza MDE mediante tres niveles de abstracción \cite{omg2014mda}:
+\begin{itemize}[nosep]
+  \item \textbf{CIM} (\textit{Computation Independent Model}): modelo de dominio y de negocio,
+        independiente de cualquier consideración computacional.
+  \item \textbf{PIM} (\textit{Platform Independent Model}): modelo de la lógica del sistema,
+        independiente de la plataforma de implementación.
+  \item \textbf{PSM} (\textit{Platform Specific Model}): modelo ligado a una plataforma de despliegue
+        concreta (lenguaje, framework, motor de persistencia).
+\end{itemize}
+Entre estos niveles median transformaciones formales, lo que permite preservar la trazabilidad desde
+el requisito de negocio hasta el artefacto ejecutable.
 
 \subsection{Model-Driven Development (MDD)}
+El \textit{Model-Driven Development} es la aplicación práctica de MDE/MDA al ciclo de vida del
+software: los modelos guían la construcción del sistema y el código fuente se obtiene, total o
+parcialmente, mediante generadores automáticos \cite{selic2003,brambilla2017}. A diferencia de un
+enfoque puramente documental del modelado, en MDD el modelo condiciona directamente el
+artefacto de software producido, lo que exige rigor sintáctico y semántico en su construcción.
 
 \subsection{Transformaciones M2M y M2T}
 
