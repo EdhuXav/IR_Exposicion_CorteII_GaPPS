@@ -1,0 +1,252 @@
+% ============================================================
+%  Documento evidencia — Exposición con demostración práctica
+%  «Herramientas que generan código fuente a partir de modelos UML»
+%  Ciclo completo Model-Driven Development (MDD)
+%  Proyecto Fin de Curso (PFC): AquaGest — Sistema Inteligente
+%  para la Gestión de una Camaronera
+%  Herramienta MDD: Eclipse Papyrus + Acceleo
+%  Asignatura: Ingeniería de Requisitos (ISR-401) — UTEQ
+% ============================================================
+\documentclass[11pt,a4paper]{article}
+
+% ---------- Idioma y codificación ----------
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish,provide=*]{babel}
+\usepackage{mathptmx} % tipografía tipo Times
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+% ---------- Geometría de página ----------
+\usepackage[a4paper,margin=2.5cm]{geometry}
+\usepackage{setspace}
+\onehalfspacing
+
+% ---------- Utilidades gráficas y de color ----------
+\usepackage{graphicx}
+\usepackage{xcolor}
+\definecolor{uteqazul}{RGB}{0,51,102}
+\definecolor{uteqgris}{RGB}{90,90,90}
+\definecolor{pendiente}{RGB}{178,34,34}
+
+% ---------- Cajas, tablas y listados ----------
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{listings}
+
+% ---------- Encabezados y pie de página ----------
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0.4pt}
+\fancyhead[L]{\small AquaGest — Documento evidencia MDD}
+\fancyhead[R]{\small Ingeniería de Requisitos (ISR-401)}
+\fancyfoot[C]{\thepage}
+
+% ---------- Títulos de sección ----------
+\usepackage{titlesec}
+\titleformat{\section}{\normalfont\Large\bfseries\color{uteqazul}}{\thesection}{1em}{}
+\titleformat{\subsection}{\normalfont\large\bfseries\color{uteqazul}}{\thesubsection}{1em}{}
+
+% ---------- Hipervínculos (URL en una sola línea) ----------
+\usepackage{url}
+\Urlmuskip=0mu plus 1mu
+\usepackage[colorlinks=true,linkcolor=uteqazul,citecolor=uteqazul,urlcolor=uteqazul,breaklinks=true]{hyperref}
+\sloppy
+
+% ---------- Bibliografía IEEE ----------
+% Se utiliza el estilo numérico ieeetr (compatible con pdflatex + bibtex),
+% que reproduce el formato de numeración IEEE exigido por la guía.
+
+% ---------- Comando para evidencias pendientes ----------
+% Uso: \evidenciapendiente{ancho}{Descripción exacta de la evidencia a insertar}
+\newtcbox{\etiquetapend}{on line,arc=1pt,colback=pendiente!10,colframe=pendiente,
+  boxrule=0.6pt,left=3pt,right=3pt,top=1pt,bottom=1pt,fontupper=\bfseries\small}
+
+\newcommand{\evidenciapendiente}[3][0.85\linewidth]{%
+  \begin{center}
+  \begin{tcolorbox}[breakable,width=#1,colback=pendiente!5,colframe=pendiente,
+      arc=2pt,boxrule=1pt,title={\etiquetapend{PENDIENTE}\ #2},
+      fonttitle=\bfseries\small,coltitle=white,colbacktitle=pendiente,
+      halign=center,valign=center]
+  \centering\itshape\color{uteqgris}
+  #3
+  \vspace{1.2cm}
+  \end{tcolorbox}
+  \end{center}
+}
+
+% Numeración de figuras/tablas aunque sean placeholders
+\usepackage{caption}
+\captionsetup{font=small,labelfont=bf}
+
+% ---------- Comando para texto puntual pendiente (p. ej. nombres, URLs) ----------
+\newcommand{\evidenciapendtext}[1]{\textcolor{pendiente}{\bfseries\itshape [PENDIENTE: #1]}}
+
+% ---------- Datos del documento ----------
+\title{Documento Evidencia — MDD}
+\author{}
+\date{}
+
+\begin{document}
+
+
+\begin{titlepage}
+\centering
+
+\textbf{\large UNIVERSIDAD TÉCNICA ESTATAL DE QUEVEDO}\\[0cm]
+
+\includegraphics[width=5cm]{imagenes/logo.png}
+
+\textbf{PRÁCTICA EXPERIMENTAL - UNIDAD II}\\[0.8cm]
+
+\textbf{TEMA:}\\[0.4cm]
+
+AQUAGUEST - SISTEMA PARA LA GESTIÓN INTELIGENTE DE UNA CAMARONERA.\\[0.8cm]
+
+\textbf{INTEGRANTES:}\\[0.5cm]
+
+GAMARRA ARAUJO EDHU XAVIER\\[0.5cm]
+PEREZ RUIZ CARLOS ANDRES\\[0.5cm]
+PONCE RIVERA MERY HELENMEY\\[0.5cm]
+SANCHEZ CENTENO ROSELYN ANDREINA\\[0.8cm]
+
+\textbf{ASIGNATURA:}\\[0.5cm]
+
+INGENIERÍA DE REQUERIMIENTOS\\[0.5cm]
+
+\textbf{CURSO:}\\[0.2cm]
+
+4TO ``A'' SOFTWARE\\[0.5cm]
+
+\textbf{FECHA:}\\[0.2cm]
+
+24/06/2026\\[0.8cm]
+
+\textbf{DOCENTE:}\\[0.2cm]
+
+ING. GUERRERO ULLOA GLEISTON CICERON\\[0.5cm]
+
+\textbf{LINK DE GITHUB:}\\[0.2cm]
+
+\url{}
+\end{titlepage}
+
+
+\newpage
+\tableofcontents
+\newpage
+
+\section*{Resumen}
+\addcontentsline{toc}{section}{Resumen}
+
+
+
+\section{Marco teórico}
+
+\subsection{Ingeniería Dirigida por Modelos (MDE)}
+
+\subsection{Model-Driven Architecture (MDA)}
+
+\subsection{Model-Driven Development (MDD)}
+
+\subsection{Transformaciones M2M y M2T}
+
+\subsection{Metamodelo y perfiles UML}
+
+\subsection{Plantillas de transformación}
+
+\subsection{Forward, reverse y round-trip engineering}
+
+\subsection{Diagramas UML admisibles como origen}
+
+\subsection{Estado del arte}
+
+\section{Justificación de la selección de la herramienta}
+
+\subsection{Requisitos y restricciones del PFC AquaGest}
+
+\subsection{Herramienta seleccionada: Eclipse Papyrus + Acceleo}
+
+\subsection{Alternativa contrastada}
+
+\section{Descripción del subsistema modelado}
+
+\subsection{Contexto general de AquaGest}
+
+\subsection{Alcance del módulo demostrado: gestión de alimentación y control de estanques}
+
+\section{Modelo UML de origen}
+\label{sec:modelo_uml}
+
+\subsection{Clases del dominio planificadas}
+
+\subsection{Relaciones previstas}
+
+\subsection{Estereotipos y perfil UML aplicado}
+
+\subsection{Diagramas complementarios previstos}
+
+\subsection{Validación sintáctica y semántica}
+
+\subsection{Evidencia gráfica del modelo}
+
+\subsection{Ubicación del archivo nativo del modelo}
+
+\section{Configuración del mecanismo de generación}
+\label{sec:configuracion_generador}
+
+\subsection{Módulo Acceleo seleccionado}
+
+\subsection{Decisiones de mapeo modelo → lenguaje objetivo}
+
+\subsection{Ubicación de los artefactos de configuración}
+
+\subsection{Evidencia gráfica de la configuración}
+
+\section{Proceso de generación}
+
+\subsection{Invocación del generador}
+
+\subsection{Tiempos observados}
+
+\subsection{Árbol del proyecto generado}
+
+\subsection{Evidencia gráfica del proceso de generación}
+
+\section{Verificación del código generado}
+
+\subsection{Compilación y ejecución de una unidad demostrable}
+
+\subsection{Correspondencia modelo → código}
+
+\subsection{Limitaciones observadas del generador}
+
+\subsection{Distinción entre código generado y código escrito manualmente}
+
+\subsection{Evidencia gráfica de verificación}
+
+\section{Cierre del ciclo: prueba de \textit{roundtrip} controlada}
+
+\subsection{Cambio planificado sobre el modelo}
+
+\subsection{Regeneración y verificación del reflejo del cambio}
+
+\subsection{Trazabilidad modelo → código tras el cambio}
+
+\subsection{Evidencia gráfica del roundtrip}
+
+\section{Reparto del trabajo por integrante}
+
+\section{Conclusiones}
+
+
+\newpage
+\bibliographystyle{ieeetr}
+\bibliography{referencias}
+
+\end{document}
