@@ -4,8 +4,7 @@
 [template public generateElement(aClass : Class)]
 [comment @main/]
 [file (aClass.name+'.java', false, 'UTF-8')]
-import java.util.Date;
-
+[generarImports(aClass)/]
 public class [aClass.name/] {
 
     [generarDefAtributos(aClass)/]
@@ -14,8 +13,28 @@ public class [aClass.name/] {
 
     [generarGetSetAtributos(aClass)/]
 
+    [generarMetodos(aClass)/]
+
 }
 [/file]
+[/template]
+
+
+[**
+==============================================================================
+ TEMPLATE: generarImports
+ Genera unicamente los imports que la clase realmente necesita,
+ revisando si algun atributo u operacion usa tipos Date o List.
+ Evita el warning "import is never used".
+==============================================================================
+*]
+[template public generarImports(aClass : Class)]
+[if (necesitaDate(aClass))]
+import java.util.Date;
+[/if]
+[if (necesitaList(aClass))]
+import java.util.List;
+[/if]
 [/template]
 
 
@@ -43,23 +62,89 @@ public class [aClass.name/] {
 [/template]
 
 
+[template public generarMetodos(aClass : Class)]
+    [for (operacion : Operation | aClass.ownedOperation) separator('\n')]
+    public [tipoRetorno(operacion)/] [operacion.name/]([generarParametros(operacion)/]) {
+        // TODO: implementar logica de negocio
+        [if (tipoRetorno(operacion) <> 'void')]
+        return [valorPorDefecto(tipoRetorno(operacion))/];
+        [/if]
+    }
+    [/for]
+[/template]
+
+
 [**
 ==============================================================================
- QUERY: tipoJava
- Traduce un tipo del modelo UML a su equivalente valido en Java.
-
- Casos cubiertos:
- - Tipos primitivos LOCALES del modelo (Date, DateTime, Time, Decimal,
-   Integer, Boolean) que si se resuelven correctamente via c.name.
- - Tipos primitivos EXTERNOS via href (como String, de la libreria
-   UMLPrimitiveTypes), que Acceleo no siempre resuelve y devuelven
-   nombre vacio: se asumen como String, que es el unico caso real
-   presente en AquaGestModel.uml con esta forma de referencia.
- - Tipos de clase (asociaciones, ej. Empleado): se devuelven tal cual,
-   ya que corresponden a otra clase Java generada por esta misma
-   plantilla.
+ QUERY: generarParametros
+ Arma la lista de parametros de entrada de una operacion (excluyendo
+ el que tiene direction = return), separados por coma, sin espacios
+ sobrantes cuando la operacion no tiene parametros. Se usa query en
+ vez de template para evitar que Acceleo arrastre el formato/espacios
+ propios del cuerpo del template como texto literal de salida.
 ==============================================================================
 *]
+[query public generarParametros(operacion : Operation) : String =
+    operacion.ownedParameter
+        ->select(p | p.direction.oclIsUndefined() or p.direction <> ParameterDirectionKind::return)
+        ->iterate(p : Parameter; acc : String = '' |
+            if acc = '' then
+                tipoJavaSimple(p.type).concat(' ').concat(p.name)
+            else
+                acc.concat(', ').concat(tipoJavaSimple(p.type)).concat(' ').concat(p.name)
+            endif
+        )
+/]
+
+
+[**
+==============================================================================
+ QUERY: necesitaDate
+ Determina si la clase requiere import java.util.Date, revisando
+ tanto sus atributos como los tipos usados en sus operaciones
+ (parametros y retorno).
+==============================================================================
+*]
+[query public necesitaDate(aClass : Class) : Boolean =
+    aClass.attribute->exists(a | tipoJava(a) = 'Date')
+    or aClass.ownedOperation->exists(op |
+        tipoRetorno(op) = 'Date'
+        or op.ownedParameter->exists(p | (p.direction.oclIsUndefined() or p.direction <> ParameterDirectionKind::return) and tipoJavaSimple(p.type) = 'Date')
+    )
+/]
+
+
+[**
+==============================================================================
+ QUERY: necesitaList
+ Determina si la clase requiere import java.util.List, revisando
+ los tipos de retorno y parametros de sus operaciones.
+==============================================================================
+*]
+[query public necesitaList(aClass : Class) : Boolean =
+    aClass.ownedOperation->exists(op |
+        tipoRetorno(op).startsWith('List')
+        or op.ownedParameter->exists(p | (p.direction.oclIsUndefined() or p.direction <> ParameterDirectionKind::return) and tipoJavaSimple(p.type).startsWith('List'))
+    )
+/]
+
+[query public tipoRetorno(operacion : Operation) : String =
+    let retorno : OrderedSet(Parameter) = operacion.ownedParameter->select(p | not p.direction.oclIsUndefined() and p.direction = ParameterDirectionKind::return) in
+    if retorno->isEmpty() then 'void'
+    else tipoJavaSimple(retorno->first().type)
+    endif
+/]
+
+
+[query public valorPorDefecto(tipo : String) : String =
+    if tipo = 'int' then '0'
+    else if tipo = 'double' then '0.0'
+    else if tipo = 'boolean' then 'false'
+    else 'null'
+    endif endif endif
+/]
+
+
 [query public tipoJava(atributo : Property) : String =
     let t : Type = atributo.type in
     if t.oclIsUndefined() then 'String'
@@ -72,4 +157,21 @@ public class [aClass.name/] {
     else if atributo.name = 'capacidadMaxLarvas' or atributo.name = 'cantidadLarvas' then 'int'
     else 'String'
     endif endif endif endif endif endif endif endif
+/]
+
+
+[query public tipoJavaSimple(t : Type) : String =
+    if t.oclIsUndefined() then 'void'
+    else if t.name.oclIsUndefined() or t.name = '' then 'String'
+    else if t.name = 'String' then 'String'
+    else if t.name = 'Integer' then 'int'
+    else if t.name = 'Boolean' then 'boolean'
+    else if t.name = 'Decimal' then 'double'
+    else if t.name = 'Date' then 'Date'
+    else if t.name = 'DateTime' then 'Date'
+    else if t.name = 'Time' then 'Date'
+    else if t.name = 'void' then 'void'
+    else if t.name = 'List' then 'List<Object>'
+    else t.name
+    endif endif endif endif endif endif endif endif endif endif endif
 /]
