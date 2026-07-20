@@ -1,0 +1,75 @@
+[comment encoding = UTF-8 /]
+[module generate('http://www.eclipse.org/uml2/5.0.0/UML')]
+
+[template public generateElement(aClass : Class)]
+[comment @main/]
+[file (aClass.name+'.java', false, 'UTF-8')]
+import java.util.Date;
+
+public class [aClass.name/] {
+
+    [generarDefAtributos(aClass)/]
+
+    public [aClass.name/]() {}
+
+    [generarGetSetAtributos(aClass)/]
+
+}
+[/file]
+[/template]
+
+
+[template public generarDefAtributos(aClass : Class)]
+    [for (atributo: Property | aClass.attribute) separator('\n')]
+        private [tipoJava(atributo)/] [atributo.name/];
+    [/for]
+[/template]
+
+
+[template public generarGetSetAtributos(aClass : Class)]
+
+    [for (atributo: Property | aClass.attribute) separator('\n')]
+    public [tipoJava(atributo)/] get[atributo.name.toUpperFirst()/]() {
+        return this.[atributo.name/];
+    }
+    [/for]
+
+    [for (atributo: Property | aClass.attribute) separator('\n')]
+    public void set[atributo.name.toUpperFirst()/]([tipoJava(atributo)/] [atributo.name/]) {
+        this.[atributo.name/] = [atributo.name/];
+    }
+    [/for]
+
+[/template]
+
+
+[**
+==============================================================================
+ QUERY: tipoJava
+ Traduce un tipo del modelo UML a su equivalente valido en Java.
+
+ Casos cubiertos:
+ - Tipos primitivos LOCALES del modelo (Date, DateTime, Time, Decimal,
+   Integer, Boolean) que si se resuelven correctamente via c.name.
+ - Tipos primitivos EXTERNOS via href (como String, de la libreria
+   UMLPrimitiveTypes), que Acceleo no siempre resuelve y devuelven
+   nombre vacio: se asumen como String, que es el unico caso real
+   presente en AquaGestModel.uml con esta forma de referencia.
+ - Tipos de clase (asociaciones, ej. Empleado): se devuelven tal cual,
+   ya que corresponden a otra clase Java generada por esta misma
+   plantilla.
+==============================================================================
+*]
+[query public tipoJava(atributo : Property) : String =
+    let t : Type = atributo.type in
+    if t.oclIsUndefined() then 'String'
+    else if not t.name.oclIsUndefined() and t.name = 'Integer' then 'int'
+    else if not t.name.oclIsUndefined() and t.name = 'Boolean' then 'boolean'
+    else if not t.name.oclIsUndefined() and t.name = 'Decimal' then 'double'
+    else if not t.name.oclIsUndefined() and t.name = 'Date' then 'Date'
+    else if not t.name.oclIsUndefined() and t.name = 'DateTime' then 'Date'
+    else if not t.name.oclIsUndefined() and t.name = 'Time' then 'Date'
+    else if atributo.name = 'capacidadMaxLarvas' or atributo.name = 'cantidadLarvas' then 'int'
+    else 'String'
+    endif endif endif endif endif endif endif endif
+/]
